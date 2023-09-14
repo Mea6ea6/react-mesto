@@ -1,13 +1,15 @@
+import { useState } from "react";
+import { useEffect } from "react";
 import { Api } from "../utils/api.js";
 import { apiConfig } from '../utils/constants';
 const api = new Api(apiConfig);
 
 function Main(props) {
-    const [userName, setUserName] = React.useState('');
-    const [userDescription, setUserDescription] = React.useState('');
-    const [userAvatar, setUserAvatar] = React.useState('');
+    const [userName, setUserName] = useState('');
+    const [userDescription, setUserDescription] = useState('');
+    const [userAvatar, setUserAvatar] = useState('');
 
-    React.useEffect(() =>
+    useEffect(() => {
         api.getAllInfo()
             .then((data) => {
                 const [userData, cardsData] = data
@@ -16,7 +18,7 @@ function Main(props) {
                 setUserAvatar(userData.avatar)
             })
             .catch(err => console.log(err))
-    )
+    }, [])
     
     return (
     <>
