@@ -1,8 +1,23 @@
-# React + Vite
+# Проектная работа
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+__Ссылка на GHPage →__ _[ссылка](https://mea6ea6.github.io/mesto-react/)_
 
-Currently, two official plugins are available:
+------
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+#### Проектная работа
+
+__Название:__ «Место-react»  
+
+__Объект проектной работы:__ сайт landing-page
+
+__Функционал сайта:__  
+
+- сверстанная интерактивная страница;
+- позиционирование элементов;
+- подготовлена инфраструктура приложения на Webpack;
+- интеграция с бэкендом;
+- проект размещен на GitHub Pages.
+
+__Инструменты и стек:__ #HTML #CSS #JS #Webpack #GitHubPages #API
+
+------
