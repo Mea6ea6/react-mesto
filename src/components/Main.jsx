@@ -2,20 +2,27 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Api } from "../utils/api.js";
 import { apiConfig } from '../utils/constants';
+import Card from "./Card.jsx";
 const api = new Api(apiConfig);
 
 function Main(props) {
     const [userName, setUserName] = useState('');
     const [userDescription, setUserDescription] = useState('');
     const [userAvatar, setUserAvatar] = useState('');
+    const [cards, setCards] = useState([]);
 
     useEffect(() => {
-        api.getAllInfo()
+        api.getUserData()
             .then((data) => {
-                const [userData, cardsData] = data
+                const userData = data
                 setUserName(userData.name)
                 setUserDescription(userData.about)
                 setUserAvatar(userData.avatar)
+            })
+            .catch(err => console.log(err))
+        api.getCardData()
+            .then((res) => {
+                setCards(res)
             })
             .catch(err => console.log(err))
     }, [])
@@ -39,17 +46,15 @@ function Main(props) {
             </section>
 
             <section className="elements">
-                <article className="element">
-                    <button className="element__delete" aria-label="Удалить"></button>
-                    <img className="element__image" />
-                    <div className="element__additionally">
-                        <h2 className="element__denomination"></h2>
-                        <div className="element__evaluations">
-                        <button className="element__like" aria-label="Лайк" type="button"></button>
-                        <p className="element__counter">0</p>
-                        </div>
-                    </div>
-                </article>
+                {cards.map((card) => (
+                    <Card
+                        key={card._id}
+                        src={card.link}
+                        title={card.name}
+                        like={card.likes.length}
+                        onCardClick={props.onCardClick}
+                    />
+                ))}
             </section>
 
         </main>

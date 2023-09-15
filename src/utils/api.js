@@ -8,11 +8,11 @@ class Api {
         return res.ok ? res.json() : res.json().then(errData => Promise.reject(errData))
     }
 
-    getAllInfo(){
-        return Promise.all([this.getUserData(), this.getAllCards()])
+    getAllData(){
+        return Promise.all([this.getUserData(), this.getCardData()])
     }
 
-    getAllCards() {
+    getCardData() {
         return fetch(`${this._url}/cards`, {
             headers: this._headers
         })
