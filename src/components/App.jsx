@@ -12,13 +12,13 @@ function App() {
   const [selectedCard, setSelectedCard] = useState(null);
 
   function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
+    setIsEditProfilePopupOpen(true);
   };
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
+    setIsAddPlacePopupOpen(true);
   };
   function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
+    setIsEditAvatarPopupOpen(true);
   };
   function handleCardClick(card) {
     setSelectedCard(card)
@@ -49,6 +49,7 @@ function App() {
       <PopupWithForm
         name="redact"
         title="Редактировать профиль"
+        btnText="Сохранить"
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
       >
@@ -80,18 +81,12 @@ function App() {
           />
           <span className="popup__error" id="info-error"></span>
         </label>
-        <button
-          className="popup__submit-button"
-          aria-label="Сохранить"
-          type="submit"
-        >
-          Сохранить
-        </button>
       </PopupWithForm>
 
       <PopupWithForm
         name="add"
         title="Новое место"
+        btnText="Сохранить"
         isOpen={isAddPlacePopupOpen}
         onClose={closeAllPopups}
       >
@@ -120,18 +115,12 @@ function App() {
           />
           <span className="popup__error" id="link-error"></span>
         </label>
-        <button
-          className="popup__submit-button"
-          aria-label="Сохранить"
-          type="submit"
-        >
-          Сохранить
-        </button>
       </PopupWithForm>
 
       <PopupWithForm
         name="redact-avatar"
         title="Обновить аватар"
+        btnText="Сохранить"
         isOpen={isEditAvatarPopupOpen}
         onClose={closeAllPopups}
       >
@@ -146,13 +135,6 @@ function App() {
           />
           <span className="popup__error" id="avatar-error"></span>
         </label>
-        <button
-          className="popup__submit-button"
-          aria-label="Сохранить"
-          type="submit"
-        >
-          Сохранить
-        </button>
       </PopupWithForm>
 
       {/* <div className="popup popup_confirm" id="confirm">

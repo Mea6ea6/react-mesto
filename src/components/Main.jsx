@@ -14,10 +14,9 @@ function Main(props) {
     useEffect(() => {
         api.getUserData()
             .then((data) => {
-                const userData = data
-                setUserName(userData.name)
-                setUserDescription(userData.about)
-                setUserAvatar(userData.avatar)
+                setUserName(data.name)
+                setUserDescription(data.about)
+                setUserAvatar(data.avatar)
             })
             .catch(err => console.log(err))
         api.getCardData()
@@ -28,7 +27,6 @@ function Main(props) {
     }, [])
     
     return (
-    <>
         <main className="content">
 
             <section className="profile">
@@ -58,7 +56,6 @@ function Main(props) {
             </section>
 
         </main>
-    </>
     )
 }
 
