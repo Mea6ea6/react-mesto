@@ -5,6 +5,7 @@
     align-self: flex-start;
     cursor: pointer;
     position: relative;
+    border-radius: 50%;
     overflow: hidden;
 }
 .profile__overlay::after {
