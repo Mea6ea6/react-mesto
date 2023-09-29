@@ -1,21 +1,23 @@
 import { useContext } from "react";
-import CurrentUserContext from "./CurrentUserContext";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
 function Card(props) {
   
+  const {card, onCardClick, onCardLike, onCardDelete} = props;
+  const {link, name, likes} = card;
   const currentUser = useContext(CurrentUserContext);
-  const isOwn = props.card.owner?._id === currentUser?._id;
-  const isLiked = props.card?.likes.some((i) => i?._id === currentUser?._id);
+  const isOwn = card.owner?._id === currentUser?._id;
+  const isLiked = card?.likes.some((i) => i?._id === currentUser?._id);
 
   function handleClick() {
-    const card = { src: props.src, title: props.title };
-    props.onCardClick(card);
+    const data = { link, name };
+    onCardClick(data);
   }
   function handleLikeClick() {
-    props.onCardLike(props.card);
+    onCardLike(card);
   }
   function handleDeleteClick() {
-    props.onCardDelete(props.card);
+    onCardDelete(card);
   }
 
   return (
@@ -23,12 +25,12 @@ function Card(props) {
       {isOwn && <button className="element__delete" aria-label="Удалить" onClick={handleDeleteClick} />}
       <img
         className="element__image"
-        src={props.src}
-        alt={props.title}
+        src={link}
+        alt={name}
         onClick={handleClick}
       />
       <div className="element__additionally">
-        <h2 className="element__denomination">{props.title}</h2>
+        <h2 className="element__denomination">{name}</h2>
         <div className="element__evaluations">
           <button
             className={`element__like ${
@@ -38,7 +40,7 @@ function Card(props) {
             type="button"
             onClick={handleLikeClick}
           />
-          <p className="element__counter">{props.like}</p>
+          <p className="element__counter">{likes.length}</p>
         </div>
       </div>
     </article>

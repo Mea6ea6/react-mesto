@@ -3,15 +3,18 @@ import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup(props) {
 
+  const {isOpen, onClose, onUpdateAvatar} = props;
   const avatarRef = useRef(null);
 
   useEffect(() => { 
-    avatarRef.current.value = "" 
-  });
+    if (isOpen) {
+      avatarRef.current.value = "";
+    }
+  }, [isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onUpdateAvatar({
+    onUpdateAvatar({
       avatar: avatarRef.current.value
     });
   }
@@ -21,8 +24,8 @@ function EditAvatarPopup(props) {
       name="redact-avatar"
       title="Обновить аватар"
       btnText="Сохранить"
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      onClose={onClose}
       onSubmit={handleSubmit}
     >
       <label className="popup__field">

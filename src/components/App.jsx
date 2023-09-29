@@ -1,7 +1,7 @@
 // imports ↓
 import { useState, useEffect } from "react";
 import api from "../utils/api";
-import CurrentUserContext from "./CurrentUserContext";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -21,14 +21,10 @@ function App() {
 
   // api ↓
   useEffect(() => {
-    api.getUserData()
-      .then((data) => {
-        setCurrentUser(data)
-      })
-      .catch((err) => console.log(err))
-    api.getCardData()
-      .then((res) => {
-        setCards(res)
+    Promise.all([api.getUserData(), api.getCardData()])
+      .then(([userData, cardData]) => {
+        setCurrentUser(userData);
+        setCards(cardData);
       })
       .catch((err) => console.log(err))
   }, []);
@@ -110,13 +106,28 @@ function App() {
 
       <Footer />
 
-      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+      <ImagePopup 
+        card={selectedCard} 
+        onClose={closeAllPopups} 
+      />
 
-      <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+      <EditProfilePopup 
+        isOpen={isEditProfilePopupOpen} 
+        onClose={closeAllPopups} 
+        onUpdateUser={handleUpdateUser} 
+      />
 
-      <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+      <EditAvatarPopup 
+        isOpen={isEditAvatarPopupOpen} 
+        onClose={closeAllPopups} 
+        onUpdateAvatar={handleUpdateAvatar} 
+      />
 
-      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
+      <AddPlacePopup 
+        isOpen={isAddPlacePopupOpen} 
+        onClose={closeAllPopups} 
+        onAddPlace={handleAddPlaceSubmit} 
+      />
 
     </CurrentUserContext.Provider>
   );

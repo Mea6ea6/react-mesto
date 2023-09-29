@@ -3,17 +3,20 @@ import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup(props) {
 
+  const {isOpen, onClose, onAddPlace} = props;
   const titleRef = useRef(null);
   const linkRef = useRef(null);
 
   useEffect(() => { 
-    titleRef.current.value = "",
-    linkRef.current.value = ""
-  });
+    if (isOpen) {
+      titleRef.current.value = "";
+      linkRef.current.value = "";
+    }
+  }, [isOpen]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onAddPlace({
+    onAddPlace({
       title: titleRef.current.value,
       link: linkRef.current.value
     });
@@ -24,8 +27,8 @@ function AddPlacePopup(props) {
         name="add"
         title="Новое место"
         btnText="Сохранить"
-        isOpen={props.isOpen}
-        onClose={props.onClose}
+        isOpen={isOpen}
+        onClose={onClose}
         onSubmit={handleSubmit}
     >
         <label className="popup__field">

@@ -1,34 +1,36 @@
 function PopupWithForm(props) {
   
+  const {name, title, children, isOpen, onClose, onSubmit, btnText} = props;
+
   return (
     <div
-      className={`popup popup_${props.name} ${
-        props.isOpen ? "popup_opened" : ""
+      className={`popup popup_${name} ${
+        isOpen ? "popup_opened" : ""
       }`}
-      id={`${props.name}`}
+      id={`${name}`}
     >
       <div className="popup__container">
         <button
           className="popup__close-button"
           aria-label="Закрыть"
           type="button"
-          onClick={props.onClose}
+          onClick={onClose}
         />
-        <h2 className="popup__title">{props.title}</h2>
+        <h2 className="popup__title">{title}</h2>
         <form
-          className={`popup__form popup__form_${props.name}`}
+          className={`popup__form popup__form_${name}`}
           method="get"
-          name={props.name}
+          name={name}
           noValidate
-          onSubmit={props.onSubmit}
+          onSubmit={onSubmit}
         >
-          {props.children}
+          {children}
           <button
             className="popup__submit-button"
-            aria-label={props.btnText}
+            aria-label={btnText}
             type="submit"
           >
-            {props.btnText}
+            {btnText}
           </button>
         </form>
       </div>
