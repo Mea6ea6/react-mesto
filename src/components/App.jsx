@@ -1,10 +1,11 @@
 // imports ↓
 import { useState, useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
-import Header from "./Header";
+import Register from "./Register";
+import Login from "./Login";
 import Main from "./Main";
-import Footer from "./Footer";
 import ImagePopup from "./ImagePopup";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -26,7 +27,7 @@ function App() {
         setCurrentUser(userData);
         setCards(cardData);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
   }, []);
 
   // functions ↓
@@ -50,39 +51,46 @@ function App() {
   }
   function handleCardLike(card) {
     const isLiked = card.likes?.some((i) => i?._id === currentUser?._id);
-    api.changeCardLikeStatus(card._id, isLiked)
+    api
+      .changeCardLikeStatus(card._id, isLiked)
       .then((newCard) => {
-        setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)))
+        setCards((state) =>
+          state.map((c) => (c._id === card._id ? newCard : c))
+        );
       })
       .catch((err) => console.log(err));
   }
   function handleCardDelete(card) {
-    api.deleteCard(card._id)
+    api
+      .deleteCard(card._id)
       .then(() => {
-        setCards((cards) => cards.filter((item) => item._id !== card._id))
+        setCards((cards) => cards.filter((item) => item._id !== card._id));
       })
       .catch((err) => console.log(err));
   }
   function handleUpdateUser(info) {
-    api.setUserInfo(info.name, info.about)
-      .then((res) => { 
-        setCurrentUser(res)
-        closeAllPopups()
+    api
+      .setUserInfo(info.name, info.about)
+      .then((res) => {
+        setCurrentUser(res);
+        closeAllPopups();
       })
       .catch((err) => console.log(err));
   }
   function handleUpdateAvatar(link) {
-    api.setUserAvatar(link)
-      .then((res) => { 
-        setCurrentUser(res)
+    api
+      .setUserAvatar(link)
+      .then((res) => {
+        setCurrentUser(res);
         closeAllPopups();
       })
       .catch((err) => console.log(err));
   }
   function handleAddPlaceSubmit(data) {
-    api.addCard(data.title, data.link)
-      .then((newCard) => { 
-        setCards([newCard, ...cards])
+    api
+      .addCard(data.title, data.link)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
         closeAllPopups();
       })
       .catch((err) => console.log(err));
@@ -91,47 +99,47 @@ function App() {
   // return ↓
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      
-      <Header />
 
-      <Main
-        cards={cards}
-        onCardClick={handleCardClick}
-        onEditProfile={handleEditProfileClick}
-        onEditAvatar={handleEditAvatarClick}
-        onAddPlace={handleAddPlaceClick}
-        onCardLike={handleCardLike}
-        onCardDelete={handleCardDelete}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Main
+              cards={cards}
+              onCardClick={handleCardClick}
+              onEditProfile={handleEditProfileClick}
+              onEditAvatar={handleEditAvatarClick}
+              onAddPlace={handleAddPlaceClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+            />
+          }
+        />
+        <Route path="/sign-up" element={<Register />} />
+        <Route path="/sign-in" element={<Login />} />
+      </Routes>
+
+      <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+
+      <EditProfilePopup
+        isOpen={isEditProfilePopupOpen}
+        onClose={closeAllPopups}
+        onUpdateUser={handleUpdateUser}
       />
 
-      <Footer />
-
-      <ImagePopup 
-        card={selectedCard} 
-        onClose={closeAllPopups} 
+      <EditAvatarPopup
+        isOpen={isEditAvatarPopupOpen}
+        onClose={closeAllPopups}
+        onUpdateAvatar={handleUpdateAvatar}
       />
 
-      <EditProfilePopup 
-        isOpen={isEditProfilePopupOpen} 
-        onClose={closeAllPopups} 
-        onUpdateUser={handleUpdateUser} 
+      <AddPlacePopup
+        isOpen={isAddPlacePopupOpen}
+        onClose={closeAllPopups}
+        onAddPlace={handleAddPlaceSubmit}
       />
-
-      <EditAvatarPopup 
-        isOpen={isEditAvatarPopupOpen} 
-        onClose={closeAllPopups} 
-        onUpdateAvatar={handleUpdateAvatar} 
-      />
-
-      <AddPlacePopup 
-        isOpen={isAddPlacePopupOpen} 
-        onClose={closeAllPopups} 
-        onAddPlace={handleAddPlaceSubmit} 
-      />
-
     </CurrentUserContext.Provider>
   );
-
 }
 
 export default App;
