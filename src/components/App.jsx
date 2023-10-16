@@ -17,7 +17,7 @@ import AddPlacePopup from "./AddPlacePopup";
 import CardDeletePopup from "./CardDeletePopup";
 
 function App() {
-// constants ↓
+  // constants ↓
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
@@ -31,7 +31,7 @@ function App() {
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
-// api ↓
+  // api ↓
   useEffect(() => {
     Promise.all([api.getUserData(), api.getCardData()])
       .then(([userData, cardData]) => {
@@ -42,56 +42,59 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const token = localStorage.getItem('jwt');
+    const token = localStorage.getItem("jwt");
     if (token) {
       autoLogIn(token);
     }
   }, []);
 
-// functions ↓
-function autoLogIn (jwt) {
-  return auth.checkToken(jwt)
-    .then(() => {
-      if (jwt) {
-        setIsUserLoggedIn(true);
-        navigate('/');
-      }
-    })
-    .catch(err => console.log(err))
-}
-function handleLogOut() {
-  localStorage.removeItem('jwt');
-  localStorage.removeItem('email');
-  setLoggedIn(false);
-}
-function handleRegisterSubmit(email, password) {
-  return auth.register(email, password)
-    .then((res) => {
-      if (res.data) {
+  // functions ↓
+  function autoLogIn(jwt) {
+    return auth
+      .checkToken(jwt)
+      .then(() => {
+        if (jwt) {
+          setIsUserLoggedIn(true);
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+  function handleLogOut() {
+    localStorage.removeItem("jwt");
+    localStorage.removeItem("email");
+    setLoggedIn(false);
+  }
+  function handleRegisterSubmit(email, password) {
+    return auth
+      .register(email, password)
+      .then((res) => {
+        if (res.data) {
+          setIsPopupInfoToolTipOpen(true);
+          setIsSuccess(true);
+          navigate("/signin");
+        }
+      })
+      .catch((err) => {
         setIsPopupInfoToolTipOpen(true);
-        setIsSuccess(true);
-        navigate("/signin");
-      }
-    })
-    .catch((err) => {
-      setIsPopupInfoToolTipOpen(true);
-      setIsSuccess(false);
-      console.log(err)
-    });
-}
-function handleLoginSubmit(email, password) {
-  return auth.authorize(email, password)
-    .then(res => {
-      if (!res) throw new Error('Error')
-      if (res.token) {
-        localStorage.setItem('jwt', res.token);
-        localStorage.setItem('email', email);
-        setIsUserLoggedIn(true);
-        navigate("/");
-      }
-    })
-    .catch((err) => console.log(err));
-}
+        setIsSuccess(false);
+        console.log(err);
+      });
+  }
+  function handleLoginSubmit(email, password) {
+    return auth
+      .authorize(email, password)
+      .then((res) => {
+        if (!res) throw new Error("Error");
+        if (res.token) {
+          localStorage.setItem("jwt", res.token);
+          localStorage.setItem("email", email);
+          setIsUserLoggedIn(true);
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
   function handleCardClick(card) {
     setSelectedCard(card);
@@ -166,29 +169,36 @@ function handleLoginSubmit(email, password) {
       .catch((err) => console.log(err));
   }
 
-// return ↓
+  // return ↓
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      
       <Routes>
-        <Route path="/signup" element={<Register onRegister={handleRegisterSubmit} />} />
+        <Route
+          path="/signup"
+          element={<Register onRegister={handleRegisterSubmit} />}
+        />
         <Route path="/signin" element={<Login onLogin={handleLoginSubmit} />} />
-        <Route path="/" element={isUserLoggedIn ?
-          <ProtectedRouteElement
-            loggedIn={isUserLoggedIn}
-            onLogOut={handleLogOut}
-            cards={cards}
-            onCardClick={handleCardClick}
-            onEditProfile={handleEditProfileClick}
-            onEditAvatar={handleEditAvatarClick}
-            onAddPlace={handleAddPlaceClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleDeleteCardConfirm}
-            element={Main}
-          />
-          :
-          <Navigate to="/signin" replace />
-        }/>
+        <Route
+          path="/"
+          element={
+            isUserLoggedIn ? (
+              <ProtectedRouteElement
+                loggedIn={isUserLoggedIn}
+                onLogOut={handleLogOut}
+                cards={cards}
+                onCardClick={handleCardClick}
+                onEditProfile={handleEditProfileClick}
+                onEditAvatar={handleEditAvatarClick}
+                onAddPlace={handleAddPlaceClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleDeleteCardConfirm}
+                element={Main}
+              />
+            ) : (
+              <Navigate to="/signin" replace />
+            )
+          }
+        />
       </Routes>
 
       {isUserLoggedIn && <Footer />}
@@ -220,10 +230,10 @@ function handleLoginSubmit(email, password) {
         card={selectedCardToDelete}
       />
 
-      <InfoToolTip 
-          isOpen={isPopupInfoToolTipOpen}
-          onClose={closeAllPopups}
-          isSuccess={isSuccess}
+      <InfoToolTip
+        isOpen={isPopupInfoToolTipOpen}
+        onClose={closeAllPopups}
+        isSuccess={isSuccess}
       />
     </CurrentUserContext.Provider>
   );
