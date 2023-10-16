@@ -7,6 +7,7 @@ import Card from "./Card.jsx";
 
 function Main(props) {
   const {
+    onLogOut,
     cards,
     onCardClick,
     onCardLike,
@@ -14,7 +15,6 @@ function Main(props) {
     onEditAvatar,
     onEditProfile,
     onAddPlace,
-    email,
   } = props;
   const currentUser = useContext(CurrentUserContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -25,10 +25,10 @@ function Main(props) {
 
   return (
     <>
-      <Header isOpen={isOpen}>
+      <Header isOpen={isOpen} onLogOut={onLogOut}>
         <nav className="header__auth">
-          <p className="header__email">{email}</p>
-          <NavLink to="/signin" className="header__logout header__logout_gray">Выйти</NavLink>
+          <p className="header__email">{localStorage.getItem('email')}</p>
+          <NavLink to="/signin" className="header__logout header__logout_gray" onClick={onLogOut}>Выйти</NavLink>
         </nav>
         <button
           className={`header__burger  ${isOpen ? "header__burger_open" : ""}`}

@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 
-function ProtectedRouteElement({component: Component, ...props}) {
+function ProtectedRouteElement({element: Component, ...props}) {
   return (
     props.loggedIn ? <Component {...props} /> : <Navigate to="/signin" replace/>
 )};

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Header from "./Header";
 
@@ -9,6 +9,11 @@ function Login (props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => { 
+    setEmail("");
+    setPassword("");
+  }, []);
+
   function handleEmailChange(e) {
     setEmail(e.target.value);
   }
@@ -17,7 +22,9 @@ function Login (props) {
   }
   function handleSubmit(e) {
     e.preventDefault();
-    // onLogin(email, password)
+    onLogin(email, password);
+    setEmail("");
+    setPassword("");
   }
 
   return (
@@ -44,13 +51,13 @@ function Login (props) {
             />
             <input
               className="sign__input"
-              id="pass"
-              name="pass"
+              id="password"
+              name="password"
               placeholder="Пароль"
               autoComplete="off"
               minLength="2"
               maxLength="80"
-              type="text"
+              type="password"
               required
               value={password || ""}
               onChange={handlePasswordChange}

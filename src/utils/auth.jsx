@@ -1,14 +1,13 @@
 const baseUrl = "https://auth.nomoreparties.co";
 
-function checkResponse(res) {
+function getResponse(res) {
   return res.ok ? res.json() : res.json().then((errData) => Promise.reject(errData));
 }
 
-export function register(email, password) {
+export const register = (email, password) => {
   return fetch(`${baseUrl}/signup`, {
     method: "POST",
     headers: {
-      "Accept": "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
@@ -16,23 +15,33 @@ export function register(email, password) {
       email: email
     }),
   })
-    .then(checkResponse)
+    .then(getResponse)
     .then((res) => {
       return res;
     })
 };
 
-// export function authorize(email, password) {
-//   return fetch(`${baseUrl}/signin`, {
-//     method: "POST",
-//     headers: {
-//       "Accept": "application/json",
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify({
-//       password: password,
-//       email: email
-//     })
-//   })
-//     .then(checkResponse)
-// };
+export const authorize = (email, password) => {
+  return fetch(`${baseUrl}/signin`, {
+    method: 'POST',
+    headers: {
+        "Content-Type": "application/json" 
+    },
+    body: JSON.stringify({
+      password: password,
+      email: email
+    }),
+  })
+  .then(getResponse)
+};
+
+export const checkToken = (token) => {
+    return fetch(`${baseUrl}/users/me`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+    }
+    })
+    .then(getResponse)
+  };

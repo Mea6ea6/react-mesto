@@ -29,7 +29,6 @@ function App() {
   const [isPopupInfoToolTipOpen, setIsPopupInfoToolTipOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
 // api ↓
@@ -42,7 +41,57 @@ function App() {
       .catch((err) => console.log(err));
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      autoLogIn(token);
+    }
+  }, []);
+
 // functions ↓
+function autoLogIn (jwt) {
+  return auth.checkToken(jwt)
+    .then(() => {
+      if (jwt) {
+        setIsUserLoggedIn(true);
+        navigate('/');
+      }
+    })
+    .catch(err => console.log(err))
+}
+function handleLogOut() {
+  localStorage.removeItem('jwt');
+  localStorage.removeItem('email');
+  setLoggedIn(false);
+}
+function handleRegisterSubmit(email, password) {
+  return auth.register(email, password)
+    .then((res) => {
+      if (res.data) {
+        setIsPopupInfoToolTipOpen(true);
+        setIsSuccess(true);
+        navigate("/signin");
+      }
+    })
+    .catch((err) => {
+      setIsPopupInfoToolTipOpen(true);
+      setIsSuccess(false);
+      console.log(err)
+    });
+}
+function handleLoginSubmit(email, password) {
+  return auth.authorize(email, password)
+    .then(res => {
+      if (!res) throw new Error('Error')
+      if (res.token) {
+        localStorage.setItem('jwt', res.token);
+        localStorage.setItem('email', email);
+        setIsUserLoggedIn(true);
+        navigate("/");
+      }
+    })
+    .catch((err) => console.log(err));
+}
 
   function handleCardClick(card) {
     setSelectedCard(card);
@@ -68,7 +117,7 @@ function App() {
     setIsPopupWithDeleteOpen(false);
     setIsPopupInfoToolTipOpen(false);
   }
-  
+
   function handleCardLike(card) {
     const isLiked = card.likes?.some((i) => i?._id === currentUser?._id);
     api
@@ -116,62 +165,30 @@ function App() {
       })
       .catch((err) => console.log(err));
   }
-  function handleRegisterSubmit(email, password) {
-    return auth.register(email, password)
-      .then(() => {
-        setIsPopupInfoToolTipOpen(true);
-        setIsSuccess(true);
-        navigate("/signin", {replace: true});
-      })
-      .catch((err) => {
-        setIsPopupInfoToolTipOpen(true);
-        setIsSuccess(false);
-        console.log(err)
-      });
-  }
-  // function handleLoginSubmit(email, password) {
-  //   return auth.authorize(email, password)
-  //     .then(data => {
-  //       if (!res) throw new Error('Error')
-  //       if (res.jwt) {
-  //         localStorage.setItem('jwt', data.jwt);
-  //         setIsUserLoggedIn(true);
-  //         setEmail(email);
-  //         navigate("/main", {replace: true});
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err)
-  //     });
-  // }
 
 // return ↓
   return (
     <CurrentUserContext.Provider value={currentUser}>
-
+      
       <Routes>
-        <Route
-          path="/main"
-          element={
-            <ProtectedRouteElement
-              element={
-                <Main
-                email={email}
-                  cards={cards}
-                  onCardClick={handleCardClick}
-                  onEditProfile={handleEditProfileClick}
-                  onEditAvatar={handleEditAvatarClick}
-                  onAddPlace={handleAddPlaceClick}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleDeleteCardConfirm}
-                />
-              }
-              loggedIn={isUserLoggedIn}
-            />
-          }
-        />
         <Route path="/signup" element={<Register onRegister={handleRegisterSubmit} />} />
-        <Route path="/signin" element={<Login />} />
+        <Route path="/signin" element={<Login onLogin={handleLoginSubmit} />} />
+        <Route path="/" element={isUserLoggedIn ?
+          <ProtectedRouteElement
+            loggedIn={isUserLoggedIn}
+            onLogOut={handleLogOut}
+            cards={cards}
+            onCardClick={handleCardClick}
+            onEditProfile={handleEditProfileClick}
+            onEditAvatar={handleEditAvatarClick}
+            onAddPlace={handleAddPlaceClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleteCardConfirm}
+            element={Main}
+          />
+          :
+          <Navigate to="/signin" replace />
+        }/>
       </Routes>
 
       {isUserLoggedIn && <Footer />}
