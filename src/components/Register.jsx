@@ -1,19 +1,33 @@
-import React from "react";
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
+
 import Header from "./Header";
 
-import popupIcon from "../images/popup/__success.svg";
+function Register(props) {
 
-function Register() {
+  const {onRegister} = props;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const headerLinkTo = "/sign-in";
-  const headerLinkText = "Вход";
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+  }
+  function handlePasswordChange(e) {
+    setPassword(e.target.value);
+  }
+  function handleSubmit(e) {
+    e.preventDefault();
+    onRegister(email, password)
+  }
 
   return (
     <>
-      <Header link={headerLinkTo} text={headerLinkText} />
+      <Header>
+        <NavLink to="/signin" className="header__logout">Войти</NavLink>
+      </Header>
       <div className="sign">
         <h2 className="sign__title">Регистрация</h2>
-        <form className="sign__form">
+        <form className="sign__form" onSubmit={handleSubmit}>
           <div className="sign__fields">
             <input
               className="sign__input"
@@ -25,17 +39,21 @@ function Register() {
               maxLength="80"
               type="email"
               required
+              value={email || ""}
+              onChange={handleEmailChange}
             />
             <input
               className="sign__input"
-              id="pass"
-              name="pass"
+              id="password"
+              name="password"
               placeholder="Пароль"
               autoComplete="off"
               minLength="2"
               maxLength="80"
-              type="password"
+              type="text"
               required
+              value={password || ""}
+              onChange={handlePasswordChange}
             />
           </div>
           <button
@@ -48,23 +66,8 @@ function Register() {
         </form>
         <p className="sign__additionally">
           Уже зарегистрированы?
-          <a href="/" className="sign__link">Войти</a>
+          <NavLink to="/signin" className="sign__link">Войти</NavLink>
         </p>
-      </div>
-
-      
-      <div className="popup" id="error">
-        <div className="popup__container">
-          <button
-            className="popup__close-button"
-            aria-label="Закрыть"
-            type="button"
-          />
-          <div className="popup__wrap">
-            <img className="popup__image" src={popupIcon} alt="error" />
-            <h2 className="popup__title">Вы успешно зарегистрировались!</h2>
-          </div>
-        </div>
       </div>
     </>
   );

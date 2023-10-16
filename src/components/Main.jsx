@@ -1,23 +1,47 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
+import { NavLink } from 'react-router-dom';
+
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import Header from "./Header";
-import Footer from "./Footer";
 import Card from "./Card.jsx";
 
 function Main(props) {
-  
-  const {cards, onCardClick, onCardLike, onCardDelete, onEditAvatar, onEditProfile, onAddPlace} = props
+  const {
+    cards,
+    onCardClick,
+    onCardLike,
+    onCardDelete,
+    onEditAvatar,
+    onEditProfile,
+    onAddPlace,
+    email,
+  } = props;
   const currentUser = useContext(CurrentUserContext);
-  
-  const headerLinkTo = "/sign-in";
-  const headerLinkText = "Выйти";
-  const headerLinkModifier = "header__logout_gray";
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleToggleClick() {
+    setIsOpen(!isOpen);
+  }
 
   return (
     <>
-      <Header link={headerLinkTo} text={headerLinkText} modifier={headerLinkModifier}>
-        <p className="header__info">email@mail.com</p>
+      <Header isOpen={isOpen}>
+        <nav className="header__auth">
+          <p className="header__email">{email}</p>
+          <NavLink to="/signin" className="header__logout header__logout_gray">Выйти</NavLink>
+        </nav>
+        <button
+          className={`header__burger  ${isOpen ? "header__burger_open" : ""}`}
+          aria-label="Открыть бургер"
+          type="button"
+          onClick={handleToggleClick}
+        >
+          <span className="header__burger-layer"></span>
+          <span className="header__burger-layer"></span>
+          <span className="header__burger-layer"></span>
+        </button>
       </Header>
+
       <main className="content">
         <section className="profile">
           <div
@@ -50,7 +74,7 @@ function Main(props) {
             onClick={onAddPlace}
           />
         </section>
-  
+
         <section className="elements">
           {cards.map((card) => (
             <Card
@@ -63,7 +87,6 @@ function Main(props) {
           ))}
         </section>
       </main>
-      <Footer />
     </>
   );
 }

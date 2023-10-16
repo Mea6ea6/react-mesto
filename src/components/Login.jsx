@@ -1,19 +1,33 @@
-import React from "react";
+import { NavLink } from 'react-router-dom';
+import { useState } from "react";
+
 import Header from "./Header";
 
-import popupIcon from "../images/popup/__error.svg";
+function Login (props) {
 
-function Login () {
+  const {onLogin} = props;
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const headerLinkTo = "/sign-up";
-  const headerLinkText = "Регистрация";
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+  }
+  function handlePasswordChange(e) {
+    setPassword(e.target.value);
+  }
+  function handleSubmit(e) {
+    e.preventDefault();
+    // onLogin(email, password)
+  }
 
   return (
     <>
-      <Header link={headerLinkTo} text={headerLinkText} />
+      <Header>
+        <NavLink to="/signup" className="header__logout">Регистрация</NavLink>
+      </Header>
       <div className="sign">
         <h2 className="sign__title">Вход</h2>
-        <form className="sign__form">
+        <form className="sign__form" onSubmit={handleSubmit}>
           <div className="sign__fields">
             <input
               className="sign__input"
@@ -25,6 +39,8 @@ function Login () {
               maxLength="80"
               type="email"
               required
+              value={email || ""}
+              onChange={handleEmailChange}
             />
             <input
               className="sign__input"
@@ -36,6 +52,8 @@ function Login () {
               maxLength="80"
               type="text"
               required
+              value={password || ""}
+              onChange={handlePasswordChange}
             />
           </div>
           <button
@@ -46,20 +64,6 @@ function Login () {
             Войти
           </button>
         </form>
-      </div>
-
-      <div className="popup" id="success">
-        <div className="popup__container">
-          <button
-            className="popup__close-button"
-            aria-label="Закрыть"
-            type="button"
-          />
-          <div className="popup__wrap">
-            <img className="popup__image" src={popupIcon} alt="success" />
-            <h2 className="popup__title">Что-то пошло не так! Попробуйте ещё раз.</h2>
-          </div>
-        </div>
       </div>
     </>
   )
