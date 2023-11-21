@@ -63,7 +63,7 @@ function App() {
   function handleLogOut() {
     localStorage.removeItem("jwt");
     localStorage.removeItem("email");
-    setLoggedIn(false);
+    setIsUserLoggedIn(false);
   }
   function handleRegisterSubmit(email, password) {
     return auth
